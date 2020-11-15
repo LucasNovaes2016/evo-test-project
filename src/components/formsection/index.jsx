@@ -12,24 +12,46 @@ export default function FormSection() {
 
   const handleSubmit = () => {};
 
+  const handleValueChange = (e) => {
+    if (value.slice(-1) === ' ') setValue(e.target.value);
+    else
+      setValue(
+        e.target.value
+          ? `+${e.target.value
+              .replace(/\D/g, '')
+              .replace(/(\d{2})(\d{2})/, '$1 $2 ')
+              .replace(/(\d{5})(\d{4})/, '$1-$2')}`
+          : ''
+      );
+  };
+
   return (
-    <form className="mt-2">
+    <form className="mt-3">
       <div className="container">
         <div className="form-row">
           <div className="form-group col-md-6">
-            <label id="value-input">Value</label>
+            <label id="value-input">Value</label>{' '}
+            <span className="required">*</span>
             <input
-              type="text"
               aria-labelledby="value-input"
+              value={value}
+              onChange={handleValueChange}
+              required
+              type="text"
+              maxLength={16}
               className="form-control"
             />
             <div className="invalid-feedback d-block">{valueError}</div>
           </div>
           <div className="form-group col-md-6">
-            <label id="monthy-price">Monthy Price</label>
+            <label id="monthy-price">Monthy Price</label>{' '}
+            <span className="required">*</span>
             <input
-              type="text"
+              type="number"
               aria-labelledby="monthy-price"
+              value={monthyPrice}
+              onChange={(e) => setMonthyPrice(e.target.value)}
+              required
               className="form-control"
             />
             <div className="invalid-feedback d-block">{monthyPriceError}</div>
@@ -37,18 +59,27 @@ export default function FormSection() {
         </div>
         <div className="form-row">
           <div className="form-group col-md-6">
-            <label id="setup-price">Setup Price</label>
+            <label id="setup-price">Setup Price</label>{' '}
+            <span className="required">*</span>
             <input
               aria-labelledby="setup-price"
-              type="text"
+              value={setupPrice}
+              onChange={(e) => setSetupPrice(e.target.value)}
+              required
+              type="number"
               className="form-control"
             />
             <div className="invalid-feedback d-block">{setupPriceError}</div>
           </div>
           <div className="form-group col-md-6">
-            <label id="currency">Currency</label>
+            <label id="currency">Currency</label>{' '}
+            <span className="required">*</span>
             <input
               aria-labelledby="currency"
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              required
+              maxLength={3}
               type="text"
               className="form-control"
             />
