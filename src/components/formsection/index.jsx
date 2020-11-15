@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   handleCurrencyError,
   handlePriceError,
@@ -135,7 +135,7 @@ export default function FormSection() {
             className="btn btn-block btn-success"
             onClick={handleSubmit}
           >
-            Cadastrar
+            Save
           </button>
         </div>
       </div>

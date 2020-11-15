@@ -1,0 +1,2 @@
+export const SET_DID_ITEMS = 'SET_DID_ITEMS';
+export const SET_EDIT_DID_ITEM_ID = 'SET_EDIT_DID_ITEM_ID';
