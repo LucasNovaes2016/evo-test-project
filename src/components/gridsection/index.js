@@ -7,7 +7,7 @@ export default function GridSection() {
 
   return (
     <div className="grid-section container mt-3">
-      <ListItems />
+      <ListItems currentPage={currentPage} />
       <PaginationSection
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
