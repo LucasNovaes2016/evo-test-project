@@ -4,12 +4,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FormSection from './components/formsection';
 import HeaderSection from './components/header';
+import GridSection from './components/gridsection';
 
 function App() {
   return (
     <>
       <HeaderSection />
       <FormSection />
+      <GridSection />
       <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
     </>
   );

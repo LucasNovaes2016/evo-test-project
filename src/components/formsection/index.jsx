@@ -132,7 +132,7 @@ export default function FormSection() {
         <div className="text-right">
           <button
             type="submit"
-            className="btn btn-block btn-success"
+            className="btn btn-block rounded-0 btn-success"
             onClick={handleSubmit}
           >
             Save
