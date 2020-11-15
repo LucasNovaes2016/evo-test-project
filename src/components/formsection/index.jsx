@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {
+  handleCurrencyError,
+  handlePriceError,
+  handleValueError,
+} from '../../core/utils';
 
 export default function FormSection() {
   const [value, setValue] = useState('');
@@ -8,9 +13,45 @@ export default function FormSection() {
   const [setupPrice, setSetupPrice] = useState('');
   const [setupPriceError, setSetupPriceError] = useState('');
   const [currency, setCurrency] = useState('');
-  const [currencyError, setCurrencyErrror] = useState('');
+  const [currencyError, setCurrencyError] = useState('');
 
-  const handleSubmit = () => {};
+  const resetAllFields = () => {
+    setValue('');
+    setMonthyPrice('');
+    setSetupPrice('');
+    setCurrency('');
+  };
+
+  const resetAllErrors = () => {
+    setValueError('');
+    setMonthyPriceError('');
+    setSetupPriceError('');
+    setCurrencyError('');
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const value_error = handleValueError(value);
+    const monthy_price_error = handlePriceError(monthyPrice);
+    const setup_price_error = handlePriceError(setupPrice);
+    const currency_error = handleCurrencyError(currency);
+
+    if (
+      !value_error &&
+      !monthy_price_error &&
+      !setup_price_error &&
+      !currency_error
+    ) {
+      resetAllFields();
+      resetAllErrors();
+    } else {
+      setValueError(value_error);
+      setMonthyPriceError(monthy_price_error);
+      setSetupPriceError(setup_price_error);
+      setCurrencyError(currency_error);
+    }
+  };
 
   const handleValueChange = (e) => {
     if (value.slice(-1) === ' ') setValue(e.target.value);
@@ -36,10 +77,10 @@ export default function FormSection() {
               aria-labelledby="value-input"
               value={value}
               onChange={handleValueChange}
-              required
               type="text"
               maxLength={16}
               className="form-control"
+              required
             />
             <div className="invalid-feedback d-block">{valueError}</div>
           </div>
@@ -51,8 +92,9 @@ export default function FormSection() {
               aria-labelledby="monthy-price"
               value={monthyPrice}
               onChange={(e) => setMonthyPrice(e.target.value)}
-              required
               className="form-control"
+              step=".01"
+              required
             />
             <div className="invalid-feedback d-block">{monthyPriceError}</div>
           </div>
@@ -65,9 +107,10 @@ export default function FormSection() {
               aria-labelledby="setup-price"
               value={setupPrice}
               onChange={(e) => setSetupPrice(e.target.value)}
-              required
               type="number"
               className="form-control"
+              step=".01"
+              required
             />
             <div className="invalid-feedback d-block">{setupPriceError}</div>
           </div>
@@ -78,10 +121,10 @@ export default function FormSection() {
               aria-labelledby="currency"
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
-              required
               maxLength={3}
               type="text"
               className="form-control"
+              required
             />
             <div className="invalid-feedback d-block">{currencyError}</div>
           </div>
@@ -90,7 +133,7 @@ export default function FormSection() {
           <button
             type="submit"
             className="btn btn-block btn-success"
-            onSubmit={handleSubmit}
+            onClick={handleSubmit}
           >
             Cadastrar
           </button>
