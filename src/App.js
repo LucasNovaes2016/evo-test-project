@@ -1,7 +1,12 @@
 import './App.css';
+import HeaderSection from './components/header';
 
 function App() {
-  return <h1> Hello World </h1>;
+  return (
+    <>
+      <HeaderSection />
+    </>
+  );
 }
 
 export default App;
