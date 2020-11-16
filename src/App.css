@@ -65,6 +65,12 @@ table.table tr th:first-child {
 table.table tr th:last-child {
   width: 75x;
 }
+
+.table.table tr.tr-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 table.table-striped tbody tr:nth-of-type(odd) {
   background-color: #fcfcfc;
 }

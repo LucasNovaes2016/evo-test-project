@@ -35,10 +35,18 @@ createServer({
     //     return true;
     //   });
 
-    //   this.delete('/api/employees/:id', (schema, request) => {
-    //     console.log('request.params delete  = ', request.params);
-    //     return true;
-    //   });
+    this.delete('/api/did-items-list/:id', (schema, request) => {
+      localStorage.setItem(
+        '@evo-test-project/did_items_list_1',
+        JSON.stringify(
+          JSON.parse(
+            localStorage.getItem('@evo-test-project/did_items_list_1')
+          ).filter((item) => item.id !== parseInt(request.params.id))
+        )
+      );
+
+      return localStorage.getItem('@evo-test-project/did_items_list_1');
+    });
   },
 });
 

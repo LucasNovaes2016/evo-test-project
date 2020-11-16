@@ -70,7 +70,7 @@ export default function FormSection() {
     <form className="mt-3">
       <div className="container">
         <div className="form-row">
-          <div className="form-group col-md-6">
+          <div className="form-group col-md-3">
             <label id="value-input">Value</label>{' '}
             <span className="required">*</span>
             <input
@@ -84,7 +84,7 @@ export default function FormSection() {
             />
             <div className="invalid-feedback d-block">{valueError}</div>
           </div>
-          <div className="form-group col-md-6">
+          <div className="form-group col-md-3">
             <label id="monthy-price">Monthy Price</label>{' '}
             <span className="required">*</span>
             <input
@@ -98,9 +98,7 @@ export default function FormSection() {
             />
             <div className="invalid-feedback d-block">{monthyPriceError}</div>
           </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
+          <div className="form-group col-md-3">
             <label id="setup-price">Setup Price</label>{' '}
             <span className="required">*</span>
             <input
@@ -114,7 +112,7 @@ export default function FormSection() {
             />
             <div className="invalid-feedback d-block">{setupPriceError}</div>
           </div>
-          <div className="form-group col-md-6">
+          <div className="form-group col-md-3">
             <label id="currency">Currency</label>{' '}
             <span className="required">*</span>
             <input
@@ -129,6 +127,7 @@ export default function FormSection() {
             <div className="invalid-feedback d-block">{currencyError}</div>
           </div>
         </div>
+
         <div className="text-right">
           <button
             type="submit"

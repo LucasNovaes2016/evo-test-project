@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { items_count_per_page } from '../../../core/data';
 import logo from '../../../core/assets/giphy.webp';
 import PropTypes from 'prop-types';
+import ListItem from './listitem';
 
 export default function ListItems(props) {
   const did_items = useSelector(
@@ -31,32 +32,7 @@ export default function ListItems(props) {
                   props.currentPage * items_count_per_page - 1
                 )
                 .map((did_item, index) => (
-                  <tr key={index}>
-                    <td>{did_item.value}</td>
-                    <td>{did_item.monthyPrice}</td>
-                    <td>{did_item.setupPrice}</td>
-                    <td>{did_item.currency}</td>
-                    <td>
-                      <a href="#editEmployeeModal" className="edit">
-                        <i
-                          className="material-icons"
-                          data-toggle="tooltip"
-                          title="Edit"
-                        >
-                          &#xE254;
-                        </i>
-                      </a>
-                      <a href="#deleteEmployeeModal" className="delete">
-                        <i
-                          className="material-icons"
-                          data-toggle="tooltip"
-                          title="Delete"
-                        >
-                          &#xE872;
-                        </i>
-                      </a>
-                    </td>
-                  </tr>
+                  <ListItem index={index} didItem={did_item} />
                 ))
             ) : (
               <tr className="text-center">
