@@ -30,7 +30,7 @@ createServer({
         localStorage.getItem('@evo-test-project/did_items_list_1')
       );
       const new_id =
-        current_did_items_list[current_did_items_list.length - 1] + 1;
+        current_did_items_list[current_did_items_list.length - 1].id + 1;
 
       if (
         JSON.parse(
