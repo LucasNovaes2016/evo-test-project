@@ -24,11 +24,40 @@ createServer({
       return localStorage.getItem('@evo-test-project/did_items_list_1');
     });
 
-    //   this.post('/api/employees', (schema, request) => {
-    //     console.log('request = ', request);
-    //     let attrs = JSON.parse(request.requestBody);
-    //     return attrs;
-    //   });
+    this.post('/api/did-items-list', (schema, request) => {
+      const new_did_item = JSON.parse(request.requestBody);
+      const current_did_items_list = JSON.parse(
+        localStorage.getItem('@evo-test-project/did_items_list_1')
+      );
+      const new_id =
+        current_did_items_list[current_did_items_list.length - 1] + 1;
+
+      if (
+        JSON.parse(
+          localStorage.getItem('@evo-test-project/did_items_list_1')
+        ).find((did_item) => did_item.value === new_did_item.value)
+      ) {
+        return {
+          errorMessage: 'This phone number is already taken.',
+          new_did_items_list: null,
+        };
+      } else {
+        localStorage.setItem(
+          '@evo-test-project/did_items_list_1',
+          JSON.stringify([
+            { id: new_id, ...new_did_item },
+            ...current_did_items_list,
+          ])
+        );
+
+        return {
+          errorMessage: null,
+          new_did_items_list: JSON.parse(
+            localStorage.getItem('@evo-test-project/did_items_list_1')
+          ),
+        };
+      }
+    });
 
     //   this.put('/api/employees/:id', (schema, request) => {
     //     console.log('request.params edit = ', request.params);

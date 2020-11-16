@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { SET_DID_ITEMS, SET_WAS_DID_ITEM_ADDED } from '../../core/redux/types';
 import {
   handleCurrencyError,
   handlePriceError,
   handleValueError,
 } from '../../core/utils';
+import { toast } from 'react-toastify';
 
 export default function FormSection() {
   const [value, setValue] = useState('');
@@ -14,6 +17,8 @@ export default function FormSection() {
   const [setupPriceError, setSetupPriceError] = useState('');
   const [currency, setCurrency] = useState('');
   const [currencyError, setCurrencyError] = useState('');
+
+  const dispatch = useDispatch();
 
   const resetAllFields = () => {
     setValue('');
@@ -43,8 +48,33 @@ export default function FormSection() {
       !setup_price_error &&
       !currency_error
     ) {
-      resetAllFields();
-      resetAllErrors();
+      fetch('/api/did-items-list', {
+        method: 'POST',
+        body: JSON.stringify({
+          value,
+          monthyPrice,
+          setupPrice,
+          currency: currency.toUpperCase(),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.errorMessage) {
+            toast.error(data.errorMessage);
+          } else {
+            toast.success('Item successfully added.');
+            dispatch({
+              type: SET_DID_ITEMS,
+              payload: data.new_did_items_list,
+            });
+            dispatch({
+              type: SET_WAS_DID_ITEM_ADDED,
+              payload: true,
+            });
+            resetAllErrors();
+            resetAllFields();
+          }
+        });
     } else {
       setValueError(value_error);
       setMonthyPriceError(monthy_price_error);

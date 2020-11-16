@@ -1,5 +1,5 @@
 export const items_count_per_page = 5;
-export const page_range_displayed = 10;
+export const page_range_displayed = 5;
 export const initial_did_items_list = [
   {
     id: 1,
