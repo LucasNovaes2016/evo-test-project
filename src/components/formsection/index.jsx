@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { SET_DID_ITEMS, SET_WAS_DID_ITEM_ADDED } from '../../core/redux/types';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  SET_DID_ITEMS,
+  SET_WAS_DID_ITEM_ADDED,
+  SET_EDIT_DID_ITEM_ID,
+} from '../../core/redux/types';
 import {
   handleCurrencyError,
   handlePriceError,
@@ -20,6 +24,29 @@ export default function FormSection() {
 
   const dispatch = useDispatch();
 
+  const edit_did_item_id = useSelector(
+    (state) => state.did_management_reducer.edit_did_item_id
+  );
+
+  const did_items = useSelector(
+    (state) => state.did_management_reducer.did_items
+  );
+
+  useEffect(() => {
+    if (edit_did_item_id) {
+      const edit_did_item = did_items.find(
+        (item) => item.id === edit_did_item_id
+      );
+      setValue(edit_did_item.value);
+      setMonthyPrice(edit_did_item.monthyPrice);
+      setSetupPrice(edit_did_item.setupPrice);
+      setCurrency(edit_did_item.currency);
+    } else {
+      resetAllFields();
+      resetAllErrors();
+    }
+  }, [edit_did_item_id]);
+
   const resetAllFields = () => {
     setValue('');
     setMonthyPrice('');
@@ -32,6 +59,11 @@ export default function FormSection() {
     setMonthyPriceError('');
     setSetupPriceError('');
     setCurrencyError('');
+  };
+
+  const resetAllFieldsAndErrors = () => {
+    resetAllFields();
+    resetAllErrors();
   };
 
   const handleSubmit = (e) => {
@@ -48,33 +80,67 @@ export default function FormSection() {
       !setup_price_error &&
       !currency_error
     ) {
-      fetch('/api/did-items-list', {
-        method: 'POST',
-        body: JSON.stringify({
-          value,
-          monthyPrice,
-          setupPrice,
-          currency: currency.toUpperCase(),
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.errorMessage) {
-            toast.error(data.errorMessage);
-          } else {
-            toast.success('Item successfully added.');
-            dispatch({
-              type: SET_DID_ITEMS,
-              payload: data.new_did_items_list,
-            });
-            dispatch({
-              type: SET_WAS_DID_ITEM_ADDED,
-              payload: true,
-            });
-            resetAllErrors();
-            resetAllFields();
-          }
-        });
+      const new_or_updated_item = JSON.stringify({
+        value,
+        monthyPrice,
+        setupPrice,
+        currency: currency.toUpperCase(),
+      });
+
+      if (edit_did_item_id) {
+        fetch(`/api/did-items-list/${edit_did_item_id}`, {
+          method: 'PUT',
+          body: new_or_updated_item,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.errorMessage) {
+              console.log('data = ', data);
+              toast.error(data.errorMessage);
+
+              dispatch({
+                type: SET_DID_ITEMS,
+                payload: data.new_did_items_list,
+              });
+
+              console.log('data = ', data);
+              if (data.errorCode === 1) resetAllFieldsAndErrors();
+            } else {
+              toast.success('Item successfully updated.');
+              dispatch({
+                type: SET_DID_ITEMS,
+                payload: JSON.parse(data.new_did_items_list),
+              });
+              dispatch({
+                type: SET_EDIT_DID_ITEM_ID,
+                payload: 0,
+              });
+              resetAllFieldsAndErrors();
+            }
+          });
+      } else {
+        fetch('/api/did-items-list', {
+          method: 'POST',
+          body: new_or_updated_item,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.errorMessage) {
+              toast.error(data.errorMessage);
+            } else {
+              toast.success('Item successfully added.');
+              dispatch({
+                type: SET_DID_ITEMS,
+                payload: data.new_did_items_list,
+              });
+              dispatch({
+                type: SET_WAS_DID_ITEM_ADDED,
+                payload: true,
+              });
+              resetAllFieldsAndErrors();
+            }
+          });
+      }
     } else {
       setValueError(value_error);
       setMonthyPriceError(monthy_price_error);

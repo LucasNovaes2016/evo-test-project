@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { SET_DID_ITEMS } from '../../../../core/redux/types';
+import {
+  SET_DID_ITEMS,
+  SET_EDIT_DID_ITEM_ID,
+} from '../../../../core/redux/types';
 import { toast } from 'react-toastify';
 
 export default function ListItem(props) {
@@ -16,10 +19,25 @@ export default function ListItem(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        if (data.errorMessage) {
+          toast.error(data.errorMessage);
+        } else {
+          toast.success('item successfully removed.');
+        }
+
         setTrClassName(null);
-        toast.success('item successfully removed.');
-        dispatch({ type: SET_DID_ITEMS, payload: data });
+        dispatch({
+          type: SET_DID_ITEMS,
+          payload: JSON.parse(data.new_did_items_list),
+        });
       });
+  };
+
+  const handleEdit = (id) => {
+    dispatch({
+      type: SET_EDIT_DID_ITEM_ID,
+      payload: id,
+    });
   };
 
   return (
@@ -29,7 +47,11 @@ export default function ListItem(props) {
       <td>{props.didItem.setupPrice}</td>
       <td>{props.didItem.currency}</td>
       <td>
-        <a href="#editEmployeeModal" className="edit">
+        <a
+          href="#editEmployeeModal"
+          className="edit"
+          onClick={() => handleEdit(props.didItem.id)}
+        >
           <i className="material-icons" data-toggle="tooltip" title="Edit">
             &#xE254;
           </i>
