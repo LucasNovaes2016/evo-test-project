@@ -14,6 +14,7 @@ export default function GridSection() {
   );
 
   useEffect(() => {
+    // Update the pagination so the user can see the new item on top
     if (was_did_item_added) {
       setCurrentPage(1);
       dispatch({

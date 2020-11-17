@@ -32,7 +32,7 @@ export default function ListItems(props) {
                   props.currentPage * items_count_per_page - 1
                 )
                 .map((did_item, index) => (
-                  <ListItem index={index} didItem={did_item} />
+                  <ListItem key={index} didItem={did_item} />
                 ))
             ) : (
               <tr className="text-center">

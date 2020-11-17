@@ -51,7 +51,7 @@ export default function ListItem(props) {
   };
 
   return (
-    <tr key={props.index}>
+    <tr>
       <td>{props.didItem.value}</td>
       <td>{props.didItem.monthyPrice}</td>
       <td>{props.didItem.setupPrice}</td>
@@ -81,7 +81,6 @@ export default function ListItem(props) {
 }
 
 ListItem.propTypes = {
-  index: PropTypes.number.isRequired,
   didItem: PropTypes.shape({
     id: PropTypes.number.isRequired,
     value: PropTypes.string.isRequired,
