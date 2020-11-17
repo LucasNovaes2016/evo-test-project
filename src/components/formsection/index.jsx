@@ -4,6 +4,7 @@ import {
   SET_DID_ITEMS,
   SET_WAS_DID_ITEM_ADDED,
   SET_EDIT_DID_ITEM_ID,
+  SET_BLOCK_CRITICAL_LAYOUT_PARTS,
 } from '../../core/redux/types';
 import {
   handleCurrencyError,
@@ -30,6 +31,10 @@ export default function FormSection() {
 
   const did_items = useSelector(
     (state) => state.did_management_reducer.did_items
+  );
+
+  const block_critical_layout_parts = useSelector(
+    (state) => state.did_management_reducer.block_critical_layout_parts
   );
 
   useEffect(() => {
@@ -80,6 +85,11 @@ export default function FormSection() {
       !setup_price_error &&
       !currency_error
     ) {
+      dispatch({
+        type: SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+        payload: true,
+      });
+
       const new_or_updated_item = JSON.stringify({
         value,
         monthyPrice,
@@ -94,6 +104,11 @@ export default function FormSection() {
         })
           .then((response) => response.json())
           .then((data) => {
+            dispatch({
+              type: SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+              payload: false,
+            });
+
             if (data.errorMessage) {
               console.log('data = ', data);
               toast.error(data.errorMessage);
@@ -125,6 +140,10 @@ export default function FormSection() {
         })
           .then((response) => response.json())
           .then((data) => {
+            dispatch({
+              type: SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+              payload: false,
+            });
             if (data.errorMessage) {
               toast.error(data.errorMessage);
             } else {
@@ -163,7 +182,9 @@ export default function FormSection() {
   };
 
   return (
-    <form className="mt-3">
+    <form
+      className={`mt-3 ${block_critical_layout_parts ? 'user-disabled' : null}`}
+    >
       <div className="container">
         <div className="form-row">
           <div className="form-group col-md-3">
