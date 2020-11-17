@@ -8,7 +8,10 @@ import GridSection from './components/gridsection';
 import { initial_did_items_list } from './core/data';
 import { createServer } from 'miragejs';
 import { useDispatch } from 'react-redux';
-import { SET_DID_ITEMS } from './core/redux/types';
+import {
+  SET_DID_ITEMS,
+  SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+} from './core/redux/types';
 
 // Setting initial database on localStorage
 localStorage.setItem(
@@ -37,10 +40,10 @@ createServer({
           localStorage.getItem('@evo-test-project/did_items_list_1')
         ).find((did_item) => did_item.value === new_did_item.value)
       ) {
-        return {
+        return JSON.stringify({
           errorMessage: 'This phone number is already taken.',
           new_did_items_list: null,
-        };
+        });
       } else {
         localStorage.setItem(
           '@evo-test-project/did_items_list_1',
@@ -50,12 +53,12 @@ createServer({
           ])
         );
 
-        return {
+        return JSON.stringify({
           errorMessage: null,
-          new_did_items_list: JSON.parse(
-            localStorage.getItem('@evo-test-project/did_items_list_1')
+          new_did_items_list: localStorage.getItem(
+            '@evo-test-project/did_items_list_1'
           ),
-        };
+        });
       }
     });
 
@@ -81,11 +84,11 @@ createServer({
             item.value === updated_did_item.value && item.id !== did_item_id
         )
       ) {
-        return {
+        return JSON.stringify({
           errorMessage: 'This phone number is already taken.',
           errorCode: 2,
           new_did_items_list: current_did_items_list,
-        };
+        });
       }
 
       const updated_did_item_list = current_did_items_list.map((item) => {
@@ -98,14 +101,12 @@ createServer({
         JSON.stringify(updated_did_item_list)
       );
 
-      console.log('updated list = ', updated_did_item_list);
-
-      return {
+      return JSON.stringify({
         errorMessage: null,
         new_did_items_list: localStorage.getItem(
           '@evo-test-project/did_items_list_1'
         ),
-      };
+      });
     });
 
     this.delete('/api/did-items-list/:id', (schema, request) => {
@@ -115,12 +116,12 @@ createServer({
           localStorage.getItem('@evo-test-project/did_items_list_1')
         ).find((item) => item.id === parseInt(request.params.id))
       ) {
-        return {
+        return JSON.stringify({
           errorMessage: 'The selected item does not exist in the database.',
           new_did_items_list: localStorage.getItem(
             '@evo-test-project/did_items_list_1'
           ),
-        };
+        });
       }
 
       localStorage.setItem(
@@ -132,12 +133,12 @@ createServer({
         )
       );
 
-      return {
+      return JSON.stringify({
         errorMessage: null,
         new_did_items_list: localStorage.getItem(
           '@evo-test-project/did_items_list_1'
         ),
-      };
+      });
     });
   },
 });
@@ -146,9 +147,18 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch({
+      type: SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+      payload: true,
+    });
+
     fetch('/api/did-items-list')
       .then((response) => response.json())
       .then((data) => {
+        dispatch({
+          type: SET_BLOCK_CRITICAL_LAYOUT_PARTS,
+          payload: false,
+        });
         dispatch({ type: SET_DID_ITEMS, payload: data });
       });
   }, []);

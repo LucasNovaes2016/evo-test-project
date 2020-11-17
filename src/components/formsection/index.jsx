@@ -115,10 +115,8 @@ export default function FormSection() {
 
               dispatch({
                 type: SET_DID_ITEMS,
-                payload: data.new_did_items_list,
+                payload: JSON.parse(data.new_did_items_list),
               });
-
-              console.log('data = ', data);
               if (data.errorCode === 1) resetAllFieldsAndErrors();
             } else {
               toast.success('Item successfully updated.');
@@ -150,7 +148,7 @@ export default function FormSection() {
               toast.success('Item successfully added.');
               dispatch({
                 type: SET_DID_ITEMS,
-                payload: data.new_did_items_list,
+                payload: JSON.parse(data.new_did_items_list),
               });
               dispatch({
                 type: SET_WAS_DID_ITEM_ADDED,
