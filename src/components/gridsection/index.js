@@ -21,7 +21,7 @@ export default function GridSection() {
         payload: false,
       });
     }
-  }, [was_did_item_added]);
+  }, [was_did_item_added, dispatch]);
 
   return (
     <div className="grid-section container mt-3">

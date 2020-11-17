@@ -50,7 +50,7 @@ export default function FormSection() {
       resetAllFields();
       resetAllErrors();
     }
-  }, [edit_did_item_id]);
+  }, [edit_did_item_id, did_items]);
 
   const resetAllFields = () => {
     setValue('');
@@ -110,12 +110,11 @@ export default function FormSection() {
             });
 
             if (data.errorMessage) {
-              console.log('data = ', data);
               toast.error(data.errorMessage);
 
               dispatch({
                 type: SET_DID_ITEMS,
-                payload: JSON.parse(data.new_did_items_list),
+                payload: data.new_did_items_list,
               });
               if (data.errorCode === 1) resetAllFieldsAndErrors();
             } else {
@@ -249,7 +248,7 @@ export default function FormSection() {
             className="btn btn-block rounded-0 btn-success"
             onClick={handleSubmit}
           >
-            Save
+            {`${edit_did_item_id ? 'UPDATE' : 'SAVE'} ITEM`}
           </button>
         </div>
       </div>
