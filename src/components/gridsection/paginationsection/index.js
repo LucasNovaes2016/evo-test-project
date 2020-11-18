@@ -9,8 +9,6 @@ export default function PaginationSection(props) {
     (state) => state.did_management_reducer.did_items
   );
 
-  console.log('length = ', did_items.length);
-
   return (
     <div className="row">
       <div className="col-md-4 offset-md-4">

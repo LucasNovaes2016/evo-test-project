@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import './App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,7 +8,6 @@ import HeaderSection from './components/header';
 import GridSection from './components/gridsection';
 import { initial_did_items_list } from './core/data';
 import { createServerFunction } from './createServerFunction';
-import { useDispatch } from 'react-redux';
 import {
   SET_DID_ITEMS,
   SET_BLOCK_CRITICAL_LAYOUT_PARTS,
