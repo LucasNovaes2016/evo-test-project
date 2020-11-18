@@ -57,20 +57,12 @@ export default function ListItem(props) {
       <td>{props.didItem.setupPrice}</td>
       <td>{props.didItem.currency}</td>
       <td className={block_critical_layout_parts ? 'user-disabled' : null}>
-        <a
-          href="#editEmployeeModal"
-          className="edit"
-          onClick={() => handleEdit(props.didItem.id)}
-        >
+        <a className="edit" onClick={() => handleEdit(props.didItem.id)}>
           <i className="material-icons" data-toggle="tooltip" title="Edit">
             &#xE254;
           </i>
         </a>
-        <a
-          href="#deleteEmployeeModal"
-          className="delete"
-          onClick={() => handleDelete(props.didItem.id)}
-        >
+        <a className="delete" onClick={() => handleDelete(props.didItem.id)}>
           <i className="material-icons" data-toggle="tooltip" title="Delete">
             &#xE872;
           </i>

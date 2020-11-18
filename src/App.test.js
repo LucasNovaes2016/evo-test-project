@@ -1,5 +1,11 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { Provider } from 'react-redux';
 import store from './core/redux/store';
 
@@ -13,9 +19,10 @@ describe('e2e tests for the application', () => {
       </Provider>
     );
 
+    // Define new item to be added
     const newDidNumber = {
-      value: '1111111111111',
-      monthyPrice: '1.99',
+      value: '3333333333333',
+      monthyPrice: '3.99',
       setupPrice: '0.99',
       currency: 'R$',
     };
@@ -25,7 +32,7 @@ describe('e2e tests for the application', () => {
     expect(valueInputNode).toBeDefined();
 
     fireEvent.change(valueInputNode, { target: { value: newDidNumber.value } });
-    expect(valueInputNode.value).toEqual('+11 11 11111-1111');
+    expect(valueInputNode.value).toEqual('+33 33 33333-3333');
 
     // Type monthy price
     const monthyPriceInputNode = screen.getByLabelText('Monthy Price');
@@ -63,9 +70,6 @@ describe('e2e tests for the application', () => {
     // Check if new item was added
     await waitFor(
       () => {
-        // Check if new item is on the screen by its unique value
-        const didTableValueNode = screen.getByText('+11 11 11111-1111');
-        expect(didTableValueNode).toBeDefined();
         // Check if successfull message exists
         const toastNode = screen.getByText('Item successfully added.');
         expect(toastNode).toBeDefined();
@@ -76,14 +80,34 @@ describe('e2e tests for the application', () => {
     );
   });
 
-  //   it('Should remove the did item previously added', async () => {
-  //     render(
-  //       <Provider store={store}>
-  //         <App />
-  //       </Provider>
-  //     );
+  it('Should remove the did item previously added', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
-  //     const didTableValueNode = screen.getByText('+11 11 11111-1111');
-  //     expect(didTableValueNode).toBeDefined();
-  //   });
+    // Get new item
+    const didTableValueNode = screen.getByText('+33 33 33333-3333');
+    expect(didTableValueNode).toBeDefined();
+
+    // Find remove icon link and click
+    const didRemoveLinkNode = didTableValueNode.parentNode.querySelector(
+      '.delete'
+    );
+    expect(didRemoveLinkNode).toBeDefined();
+
+    fireEvent.click(didRemoveLinkNode);
+
+    waitFor(
+      () => {
+        // Check if successfull message exists
+        const toastNode = screen.getByText('item successfully removed.');
+        expect(toastNode).toBeDefined();
+      },
+      {
+        timeout: 3000,
+      }
+    );
+  });
 });
