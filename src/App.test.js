@@ -149,6 +149,5 @@ describe('e2e tests for the application', () => {
         timeout: 2500,
       }
     );
-    console.log('OLA OLA OLA');
   });
 });
