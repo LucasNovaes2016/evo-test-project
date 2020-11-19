@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import store from './core/redux/store';
 
@@ -27,14 +21,14 @@ describe('e2e tests for the application', () => {
       currency: 'R$',
     };
 
-    // Type value
+    // Get value input and type value
     const valueInputNode = screen.getByLabelText('Value');
     expect(valueInputNode).toBeDefined();
 
     fireEvent.change(valueInputNode, { target: { value: newDidNumber.value } });
     expect(valueInputNode.value).toEqual('+33 33 33333-3333');
 
-    // Type monthy price
+    // Get monthy price input and type monthy price
     const monthyPriceInputNode = screen.getByLabelText('Monthy Price');
     expect(monthyPriceInputNode).toBeDefined();
 
@@ -43,7 +37,7 @@ describe('e2e tests for the application', () => {
     });
     expect(monthyPriceInputNode.value).toEqual(newDidNumber.monthyPrice);
 
-    // Type setup Price
+    // Get setup price input and type monthy price
     const setupPriceInputNode = screen.getByLabelText('Setup Price');
     expect(setupPriceInputNode).toBeDefined();
 
@@ -52,7 +46,7 @@ describe('e2e tests for the application', () => {
     });
     expect(setupPriceInputNode.value).toEqual(newDidNumber.setupPrice);
 
-    // Type currency
+    // Get currency input and type currency
     const currencyInputNode = screen.getByLabelText('Currency');
     expect(currencyInputNode).toBeDefined();
 
@@ -61,21 +55,67 @@ describe('e2e tests for the application', () => {
     });
     expect(currencyInputNode.value).toEqual(newDidNumber.currency);
 
-    // Click button
+    // Get save button and click
     const buttonNode = screen.getByText('SAVE ITEM');
     expect(buttonNode).toBeDefined();
 
     fireEvent.click(buttonNode);
 
-    // Check if new item was added
+    // Waits for the successfull message
     await waitFor(
       () => {
-        // Check if successfull message exists
         const toastNode = screen.getByText('Item successfully added.');
         expect(toastNode).toBeDefined();
       },
       {
-        timeout: 3000,
+        timeout: 2500,
+      }
+    );
+  });
+
+  it('Should update the currency property of the new DID item added', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    // Get the new item td by value
+    const didTableValueNode = screen.getByText('+33 33 33333-3333');
+    expect(didTableValueNode).toBeDefined();
+
+    // Get edit icon link and click
+    const didUpdateLinkNode = didTableValueNode.parentNode.querySelector(
+      '.edit'
+    );
+    expect(didUpdateLinkNode).toBeDefined();
+
+    fireEvent.click(didUpdateLinkNode);
+
+    // Get the currency input, check if it's correct and type the new currency
+    const currencyInputNode = screen.getByLabelText('Currency');
+    expect(currencyInputNode).toBeDefined();
+    expect(currencyInputNode.value).toEqual('R$');
+
+    fireEvent.change(currencyInputNode, {
+      target: { value: 'U$' },
+    });
+    expect(currencyInputNode.value).toEqual('U$');
+
+    // Get the update button and click
+    const buttonNode = screen.getByText('UPDATE ITEM');
+    expect(buttonNode).toBeDefined();
+
+    fireEvent.click(buttonNode);
+
+    // Waits for the sucessfull message
+    await waitFor(
+      () => {
+        const toastNode = screen.getByText('Item successfully updated.');
+        expect(toastNode).toBeDefined();
+      },
+      {
+        timeout: 2500,
       }
     );
   });
@@ -87,11 +127,11 @@ describe('e2e tests for the application', () => {
       </Provider>
     );
 
-    // Get new item
+    // Get new item by td value
     const didTableValueNode = screen.getByText('+33 33 33333-3333');
     expect(didTableValueNode).toBeDefined();
 
-    // Find remove icon link and click
+    // Get remove icon link and click
     const didRemoveLinkNode = didTableValueNode.parentNode.querySelector(
       '.delete'
     );
@@ -99,15 +139,16 @@ describe('e2e tests for the application', () => {
 
     fireEvent.click(didRemoveLinkNode);
 
-    waitFor(
+    // Waits for the successfull message
+    await waitFor(
       () => {
-        // Check if successfull message exists
         const toastNode = screen.getByText('item successfully removed.');
         expect(toastNode).toBeDefined();
       },
       {
-        timeout: 3000,
+        timeout: 2500,
       }
     );
+    console.log('OLA OLA OLA');
   });
 });
